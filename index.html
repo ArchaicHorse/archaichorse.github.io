@@ -33,7 +33,7 @@
 
     <script src="bitview.js"></script>
     <script>
-        var assetURL = 'output_frag_extended.mp4';
+        var assetURL = 'output_frag.mp4';
         var mimeCodec = 'video/mp4; codecs="avc1.640015"';
         var emptyHash = "9ae5abd3298c7ca041d4e8f8f4d66a6b5c956ea1e81b82424472bac2060ef449";
         var indexes = [-1,
@@ -41,7 +41,7 @@
           /* 4625,*/
           /* 4795,*/
           /* 14298,*/
-          14312,
+          14313,
       		/* 14319,*/
       		/* 14326,*/
       		/* 15058 */];
@@ -100,9 +100,10 @@
             bv.setBit(index, !bv.getBit(index));
             bv.setBit(14356, !bv.getBit(14356));
             bv.setBit(14357, !bv.getBit(14357));
-          } else if(index == 14312) {
+          } else if(index == 14313) {
             bv.setBit(index, !bv.getBit(index));
-            bv.setBit(14316, !bv.getBit(14316));
+            bv.setBit(14314, !bv.getBit(14314));
+            bv.setBit(14315, !bv.getBit(14315));
           } else {
             bv.setBit(index, !bv.getBit(index));
           }
