@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        canvas {
+        			max-width: 144px;
+        			max-height: 82px;
+        		}
+    </style>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+</head>
+
+<body>
+    <main role="main" class="container">
+      <div>
+        <h1>Video Decoding Test Page</h1>
+        <p class="lead">This page collects some information about your browser, including how it decodes video.<br>After collecting, please take the time to fill in some information about your device and submit it to help us understand the data!</p>
+        <div class="controls"></div>
+        <hr>
+      </div>
+      <div class="row fingerprint"  style="display:none; padding: 16px;">
+          <div class="col-sm data border border-secondary">
+            <h2>Visual Fingerprint</h2>
+            <div class="visual"></div>
+            <h2>Hashed Fingerprint</h2>
+            <div class="hashes"></div>
+          </div>
+      </div>
+    </main>
+
+    <script src="bitview.js"></script>
+    <script>
+        var assetURL = 'output_frag.mp4';
+        var mimeCodec = 'video/mp4; codecs="avc1.640015"';
+        var emptyHash = "9ae5abd3298c7ca041d4e8f8f4d66a6b5c956ea1e81b82424472bac2060ef449";
+        var indexes = [-1,
+      		1954,
+      		4625,
+      		4795,
+            14298,
+            14313,
+      		14319,
+      		14326,
+      		15058];
+        var current = -1;
+        var attempt = 0;
+
+        var asset;
+        var video = document.createElement('video');
+        video.addEventListener('canplay', function() {
+            setTimeout(getHash, attempt*100);
+        });
+        video.addEventListener('error', function() {
+            console.log(video.error);
+            if(!(current in hashes)) hashes[current] = [];
+            hashes[current].push("null");
+            loadNext();
+        });
+        var hashes = {};
+
+      	function sha256(imageData) {
+            return crypto.subtle.digest("SHA-256", imageData.data).then(function (hash) {
+            return hex(hash);
+          });
+        }
+
+        function hex(buffer) {
+          var hexCodes = [];
+          var view = new DataView(buffer);
+          for (var i = 0; i < view.byteLength; i += 4) {
+            var value = view.getUint32(i)
+            var stringValue = value.toString(16)
+            var padding = '00000000'
+            var paddedValue = (padding + stringValue).slice(-padding.length)
+            hexCodes.push(paddedValue);
+          }
+
+          return hexCodes.join("");
+        }
+
+        function loadAsset() {
+          var xhr = new XMLHttpRequest;
+          xhr.open('get', assetURL);
+          xhr.responseType = 'arraybuffer';
+          xhr.onload = function () {
+            asset = xhr.response;
+            setup();
+          };
+          xhr.send();
+        }
+
+        function fuzz(index) {
+          if(index == -1) return asset.slice(0);
+          var buf = asset.slice(0);
+          var bv = new BitView(buf);
+          if(index == 4795) {
+            bv.setBit(index, !bv.getBit(index));
+            bv.setBit(14356, !bv.getBit(14356));
+            bv.setBit(14357, !bv.getBit(14357));
+          } else if(index == 14313) {
+            bv.setBit(index, !bv.getBit(index));
+            bv.setBit(14314, !bv.getBit(14314));
+            bv.setBit(14315, !bv.getBit(14315));
+          } else {
+            bv.setBit(index, !bv.getBit(index));
+          }
+          return buf;
+        }
+
+        function getHash() {
+          var canvas = document.createElement('canvas');
+          canvas.id = current;
+          canvas.height = video.videoHeight;
+          canvas.width = video.videoWidth;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          sha256(data).then(function(digest) {
+            if(!(current in hashes)) hashes[current] = [];
+
+            if(digest != emptyHash || attempt > 2) {
+              canvas.setAttribute("data-hash", digest);
+              document.querySelector(".visual").appendChild(canvas);
+              hashes[current].push(digest);
+            }
+
+            loadNext();
+          });
+        }
+
+        function setup() {
+          startTime = performance.now();
+          loadNext();
+        }
+
+        function sourceOpen (_) {
+          var mediaSource = this;
+          mediaSource.removeEventListener('sourceopen', sourceOpen);
+          sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
+
+          sourceBuffer.appendBuffer(fuzz(current));
+        }
+
+        function getNext() {
+          for(var i = 0; i < indexes.length; i++) {
+            if(indexes[i] in hashes) {
+              if(hashes[indexes[i]].length < 2) return indexes[i];
+            } else {
+              return indexes[i];
+            }
+          }
+
+          return null;
+        }
+
+        function loadNext() {
+          last = current;
+          current = getNext();
+
+          if(last == current) {
+            attempt++;
+          } else {
+            attempt = 0;
+          }
+
+          if(current === null) {
+            finish();
+          } else {
+            if ('MediaSource' in window && MediaSource.isTypeSupported(mimeCodec)) {
+              var mediaSource = new MediaSource;
+              video.src = URL.createObjectURL(mediaSource);
+              mediaSource.addEventListener('sourceopen', sourceOpen);
+            } else {
+              console.error('Unsupported MIME type or codec: ', mimeCodec);
+            }
+          }
+        }
+
+        function finish() {
+          var time = performance.now() - startTime;
+
+          var pre = document.createElement("pre");
+          pre.innerHTML = JSON.stringify(hashes, undefined, 2);
+          document.querySelector(".hashes").appendChild(pre);
+
+          var renderer = null;
+
+          try {
+            var canvas = document.createElement('canvas');
+            var gl = canvas.getContext('webgl');
+            var debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+            renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+          } catch(e) {
+
+          }
+
+          document.querySelector("#useragent").value = navigator.userAgent;
+          document.querySelector("#renderer").value = renderer;
+          document.querySelector("#videos").value = JSON.stringify(hashes);
+          document.querySelector("#time").value = time;
+          document.querySelector(".submit").style.display = "block";
+        }
+
+
+        var button = document.createElement("button");
+        button.setAttribute("type", "button");
+        button.setAttribute("class", "btn btn-primary");
+        button.innerHTML = "Collect Fingerprint";
+        button.addEventListener("click", function() {
+          button.setAttribute("disabled", "true");
+          document.querySelector(".fingerprint").style.display = "block";
+          loadAsset();
+        });
+
+        document.querySelector(".controls").appendChild(button);
+    </script>
+</body>
+
+</html>
