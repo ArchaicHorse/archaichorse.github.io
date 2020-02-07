@@ -42,7 +42,7 @@
 
         var video = document.createElement('video');
         video.addEventListener('canplay', function() {
-            setTimeout(getHash, attempt*100);
+            setTimeout(getHash, 50);
         });
         video.addEventListener('error', function() {
             console.log(video.error);
@@ -55,6 +55,7 @@
         var hashes = {};
 
         function loadAsset() {
+
           if (current >= assetURLs.length) {
             finish();
           } else {
@@ -87,10 +88,6 @@
             }
         }
         
-        var attempt = 0;
-
-
-
       	function sha256(imageData) {
             return crypto.subtle.digest("SHA-256", imageData.data).then(function (hash) {
             return hex(hash);
@@ -122,11 +119,10 @@
           sha256(data).then(function(digest) {
             if(!(current in hashes)) hashes[current] = [];
 
-            if(digest != emptyHash || attempt > 2) {
-              canvas.setAttribute("data-hash", digest);
-              document.querySelector(".visual").appendChild(canvas);
-              hashes[current].push(digest);
-            }
+            canvas.setAttribute("data-hash", digest);
+            document.querySelector(".visual").appendChild(canvas);
+            hashes[current].push(digest);
+
             current += 1;
             loadAsset();
           });
