@@ -81,7 +81,7 @@
           xhr.responseType = 'arraybuffer';
           xhr.onload = function () { 
             asset = xhr.response;
-            //setup();
+            loadNext();
           };
           xhr.send();
         }
@@ -107,11 +107,6 @@
           });
         }
 
-        function setup() {
-          startTime = performance.now();
-          loadNext();
-        }
-
         function sourceOpen (_) {
           var mediaSource = this;
           mediaSource.removeEventListener('sourceopen', sourceOpen);
@@ -121,11 +116,9 @@
         }
 
         function loadNext() {
-          current += 1;
           if(current > 4) {
             finish();
           } else {
-            loadAsset();
             if ('MediaSource' in window && MediaSource.isTypeSupported(mimeCodec)) {
               var mediaSource = new MediaSource;
               video.src = URL.createObjectURL(mediaSource);
@@ -133,6 +126,8 @@
             } else {
               console.error('Unsupported MIME type or codec: ', mimeCodec);
             }
+            current += 1;
+            loadAsset();
           }
         }
 
