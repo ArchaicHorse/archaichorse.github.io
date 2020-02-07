@@ -36,8 +36,8 @@
     <script>
         var assetURLs = ['output_frag.mp4', 'output_frag_added_bytes3.mp4', 'output_frag.mp4', 'output_frag_removed_byte3.mp4'];
         var mimeCodec = 'video/mp4; codecs="avc1.640015"';
-        var emptyHash = "9ae5abd3298c7ca041d4e8f8f4d66a6b5c956ea1e81b82424472bac2060ef449";
-        var current = 0;
+        var emptyHash = "5d005ea2ee99cbd6a380ddcc8650efb9d9a173c2a367d659323d9a9ca90b1180";
+        var current = -1;
         var attempt = 0;
 
         var asset;
@@ -75,6 +75,7 @@
 
         function loadAsset() {
           var xhr = new XMLHttpRequest;
+          //console.log(current);
           xhr.open('get', assetURLs[current]);
           xhr.responseType = 'arraybuffer';
           xhr.onload = function () {
@@ -140,17 +141,6 @@
           var pre = document.createElement("pre");
           pre.innerHTML = JSON.stringify(hashes, undefined, 2);
           document.querySelector(".hashes").appendChild(pre);
-
-          var renderer = null;
-
-          try {
-            var canvas = document.createElement('canvas');
-            var gl = canvas.getContext('webgl');
-            var debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-            renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-          } catch(e) {
-
-          }
         }
 
 
