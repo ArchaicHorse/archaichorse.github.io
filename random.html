@@ -34,7 +34,7 @@
 
     <script src="bitview.js"></script>
     <script>
-        var assetURLs = ['output_frag.mp4', 'output_frag_added_bytes.mp4', 'output_frag.mp4', 'output_frag_removed_byte.mp4'];
+        var assetURLs = ['output_frag.mp4', 'output_frag_added_bytes3.mp4', 'output_frag.mp4', 'output_frag_removed_byte3.mp4'];
         var mimeCodec = 'video/mp4; codecs="avc1.640015"';
         var emptyHash = "9ae5abd3298c7ca041d4e8f8f4d66a6b5c956ea1e81b82424472bac2060ef449";
         var current = 0;
@@ -120,7 +120,7 @@
 
         function loadNext() {
           current += 1;
-          if(current === 4) {
+          if(current > 4) {
             finish();
           } else {
             loadAsset();
@@ -151,10 +151,6 @@
           } catch(e) {
 
           }
-
-          document.querySelector("#renderer").value = renderer;
-          document.querySelector("#videos").value = JSON.stringify(hashes);
-          document.querySelector("#time").value = time;
         }
 
 
