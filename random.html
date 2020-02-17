@@ -38,18 +38,27 @@
           'output_frag.mp4', 
           'output_frag_added_bytes.mp4', 
           'output_frag_added_bytes.mp4', 
+
           'output_frag.mp4', 
           'output_frag_removed_byte.mp4',
           'output_frag_removed_byte.mp4',
+
           'output_frag.mp4', 
           'output_frag_added_and_removed_bytes.mp4',
           'output_frag_added_and_removed_bytes.mp4',
+
           'output_frag.mp4', 
           'output_frag_added_bytes_qp_delta_0.mp4',
           'output_frag_added_bytes_qp_delta_0.mp4',
+
           'output_frag.mp4', 
           'output_frag_modified.mp4',
-          'output_frag_modified.mp4'
+          'output_frag_modified.mp4',
+
+          'output_frag.mp4', 
+          'output_frag_all_2.mp4',
+          'output_frag_all_2.mp4'
+
         ];
         var mimeCodec = 'video/mp4; codecs="avc1.640015"';
         var current = 0;
@@ -133,6 +142,10 @@
           var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
           sha256(data).then(function(digest) {
             if(!(current in hashes)) hashes[current] = [];
+
+            if (current % 3 == 0 ) {
+              document.querySelector(".visual").appendChild(document.createElement("br"));
+            }
 
             canvas.setAttribute("data-hash", digest);
             document.querySelector(".visual").appendChild(canvas);
