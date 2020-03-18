@@ -16,7 +16,7 @@
 <body>
     <main role="main" class="container">
       <div>
-        <h1>Video Decoding Test Page 1.7</h1>
+        <h1>Video Decoding Test Page 1.9.3</h1>
         <p class="lead">This page collects some information about your browser, including how it decodes video.<br>
             After collecting, please take the time to fill in some information about your device and submit it to help us understand the data!</p>
         <div class="controls"></div>
@@ -28,6 +28,8 @@
             <div class="visual"></div>
             <h2>Hashed Fingerprint</h2>
             <div class="hashes"></div>
+            <h2>Downloadable Fingerprint</h2>
+            <div class="visualdownload"></div>
           </div>
       </div>
     </main>
@@ -35,6 +37,7 @@
     <script src="bitview.js"></script>
     <script>
         var assetURLs = [
+          /*
           'output_frag.mp4', 
           'output_frag_modified.mp4',
           'output_frag_modified.mp4',
@@ -54,6 +57,35 @@
           'grayscale_red.mp4', 
           'output_frag_combined.mp4',
           'output_frag_combined.mp4',
+
+          'grayscale_red.mp4', 
+          'output_frag_all_all_2.mp4',
+          'output_frag_all_all_2.mp4',
+*/
+          //'ColorizedGrayscale_web_ready_36.mp4', 
+          'output_frag_all_all_2.mp4',
+          'output_frag_all_all_2.mp4',
+/*
+          'ColorizedGrayscale_web_ready_72.mp4', 
+          'output_frag_all_all_2.mp4',
+          'output_frag_all_all_2.mp4',
+
+          'ColorizedGrayscale_web_ready_144.mp4', 
+          'output_frag_all_all_2.mp4',
+          'output_frag_all_all_2.mp4',
+
+          'ColorizedGrayscale_web_ready_288.mp4', 
+          'output_frag_all_all_2.mp4',
+          'output_frag_all_all_2.mp4',
+
+          'ColorizedGrayscale_web_ready_576.mp4', 
+          'output_frag_all_all_2.mp4',
+          'output_frag_all_all_2.mp4',
+
+          'ColorizedGrayscale_web_ready_1152.mp4', 
+          'output_frag_all_all_2.mp4',
+          'output_frag_all_all_2.mp4',
+*/
         ];
         var mimeCodec = 'video/mp4; codecs="avc1.640015"';
         var current = 0;
@@ -65,8 +97,8 @@
         });
         video.addEventListener('error', function() {
             console.log(video.error);
-            if(!(current in hashes)) hashes[current] = [];
-            hashes[current].push("null");
+            if(!(assetURLs[current] in hashes)) hashes[assetURLs[current]] = [];
+            hashes[assetURLs[current]].push("null");
             current += 1;
             loadAsset();
         });
@@ -98,13 +130,17 @@
         }
 
         function processAsset() {
-          if ('MediaSource' in window && MediaSource.isTypeSupported(mimeCodec)) {
+          if ('MediaSource' in window) {
+            if ( MediaSource.isTypeSupported(mimeCodec) ) {
               var mediaSource = new MediaSource;
               video.src = URL.createObjectURL(mediaSource);
               mediaSource.addEventListener('sourceopen', sourceOpen);
             } else {
               console.error('Unsupported MIME type or codec: ', mimeCodec);
             }
+          } else {
+            console.error('MediaSource not in window');
+          }
         }
         
       	function sha256(imageData) {
@@ -136,7 +172,7 @@
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
           sha256(data).then(function(digest) {
-            if(!(current in hashes)) hashes[current] = [];
+            if(!(assetURLs[current] in hashes)) hashes[assetURLs[current]] = [];
 
             if (current % 3 == 0 ) {
               document.querySelector(".visual").appendChild(document.createElement("br"));
@@ -144,7 +180,13 @@
 
             canvas.setAttribute("data-hash", digest);
             document.querySelector(".visual").appendChild(canvas);
-            hashes[current].push(digest);
+            hashes[assetURLs[current]].push(digest);
+
+            // set up download
+            var img_url = canvas.toDataURL("image/png");
+            var img = document.createElement('img');
+            img.src = img_url;
+            document.querySelector(".visualdownload").appendChild(img);
 
             current += 1;
             loadAsset();
