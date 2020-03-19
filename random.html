@@ -16,7 +16,7 @@
 <body>
     <main role="main" class="container">
       <div>
-        <h1>Video Decoding Test Page 2.1</h1>
+        <h1>Video Decoding Test Page 2.1.1</h1>
         <p class="lead">This page collects some information about your browser, including how it decodes video.<br>
             After collecting, please take the time to fill in some information about your device and submit it to help us understand the data!</p>
         <div class="controls"></div>
@@ -69,17 +69,22 @@
 
           'lt.mp4',
           'lt2.mp4',
+
           'lt3.mp4',
           'lt4.mp4',
 
           'grayscale_red.mp4',
           'lt.mp4',
+
           'grayscale_red.mp4',
           'lt2.mp4',
+
           'grayscale_red.mp4',
           'lt3.mp4',
+
           'grayscale_red.mp4',
           'lt4.mp4',
+
           'grayscale_red.mp4',
           't.mp4',
 /*
@@ -191,7 +196,7 @@
           sha256(data).then(function(digest) {
             if(!(assetURLs[current] in hashes)) hashes[assetURLs[current]] = [];
 
-            if (current % 3 == 0 ) {
+            if (current % 2 == 0 ) {
               document.querySelector(".visual").appendChild(document.createElement("br"));
             }
 
