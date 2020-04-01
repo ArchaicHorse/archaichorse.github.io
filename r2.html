@@ -38,6 +38,7 @@
     <script>
         var assetURLs = [
           '8.mp4',
+          'output_frag.mp4',
         ];
         var mimeCodec = 'video/mp4; codecs="avc1.640015"';
         var current = 0;
@@ -66,7 +67,6 @@
             xhr.responseType = 'arraybuffer';
             xhr.onload = function () { 
               asset = xhr.response;
-              console.log(asset);
               processAsset();
             };
             xhr.send();
