@@ -7,7 +7,7 @@
 
 <body>
     <div class="vid1div" >
-        <video class="vid1" width="144" height="82" autoplay>
+        <video class="vid1" width="144" height="82" controls>
             <source src="2.mp4" type="video/mp4">
         </video>
         <br /><br />
@@ -42,7 +42,7 @@
     });
 
     function draw1Canvas() {
-        console.log("draw2Canvas");
+        console.log("draw1Canvas");
 
         var canvas = document.createElement('canvas');
         canvas.height = vid1.videoHeight;
@@ -84,7 +84,7 @@
     });
 
     function draw3Canvas() {
-        console.log("draw2Canvas");
+        console.log("draw3Canvas");
 
         var canvas = document.createElement('canvas');
         canvas.height = vid3.videoHeight;
