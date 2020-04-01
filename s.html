@@ -42,6 +42,8 @@
     });
 
     function draw2Canvas() {
+        console.log("draw2Canvas");
+
         var canvas = document.createElement('canvas');
         canvas.height = vid1.videoHeight;
         canvas.width = vid1.videoWidth;
@@ -52,7 +54,49 @@
         var img_url = canvas.toDataURL("image/png");
         var img = document.createElement('img');
         img.src = img_url;
-        document.querySelector(".vid1").appendChild(img);
+        document.querySelector(".vid1div").appendChild(img);
+    }
+
+        
+    vid2.addEventListener('canplay', function() {
+            setTimeout(draw2Canvas, 50);
+    });
+
+    function draw2Canvas() {
+        console.log("draw2Canvas");
+
+        var canvas = document.createElement('canvas');
+        canvas.height = vid2.videoHeight;
+        canvas.width = vid2.videoWidth;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(vid2, 0, 0, canvas.width, canvas.height);
+        var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        var img_url = canvas.toDataURL("image/png");
+        var img = document.createElement('img');
+        img.src = img_url;
+        document.querySelector(".vid2div").appendChild(img);
+    }
+
+        
+    vid3.addEventListener('canplay', function() {
+            setTimeout(draw2Canvas, 50);
+    });
+
+    function draw2Canvas() {
+        console.log("draw2Canvas");
+
+        var canvas = document.createElement('canvas');
+        canvas.height = vid3.videoHeight;
+        canvas.width = vid3.videoWidth;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(vid3, 0, 0, canvas.width, canvas.height);
+        var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        var img_url = canvas.toDataURL("image/png");
+        var img = document.createElement('img');
+        img.src = img_url;
+        document.querySelector(".vid3div").appendChild(img);
     }
 
 </script>
