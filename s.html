@@ -27,6 +27,8 @@
         <br /><br />
     </div>
 
+    <div class="renderorder"></div>
+
 
 <script>
     var vid1div = document.querySelector(".vid1");
@@ -36,20 +38,33 @@
     var vid1 = document.querySelector(".vid1");
     var vid2 = document.querySelector(".vid2");
     var vid3 = document.querySelector(".vid3");
+
+    var ro = document.querySelector(".renderorder");
     
+
+    var o1 = document.createElement("p");
+    o1.innerHTML = "draw1canvas";
+
+    var o2 = document.createElement("p");
+    o2.innerHTML = "draw2canvas";
+
+    var o3 = document.createElement("p");
+    o3.innerHTML = "draw3canvas";
+
     vid1.addEventListener('canplay', function() {
             setTimeout(draw1Canvas, 50);
     });
 
     function draw1Canvas() {
-        console.log("draw1Canvas");
-
         var canvas = document.createElement('canvas');
         canvas.height = vid1.videoHeight;
         canvas.width = vid1.videoWidth;
         var ctx = canvas.getContext('2d');
+
+        ro.appendChild(o1);
         ctx.drawImage(vid1, 0, 0, canvas.width, canvas.height);
         var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        ro.appendChild(o1);
 
         var img_url = canvas.toDataURL("image/png");
         var img = document.createElement('img');
@@ -65,14 +80,16 @@
     });
 
     function draw2Canvas() {
-        console.log("draw2Canvas");
+        
 
         var canvas = document.createElement('canvas');
         canvas.height = vid2.videoHeight;
         canvas.width = vid2.videoWidth;
         var ctx = canvas.getContext('2d');
+        ro.appendChild(o2);
         ctx.drawImage(vid2, 0, 0, canvas.width, canvas.height);
         var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        ro.appendChild(o2);
 
         var img_url = canvas.toDataURL("image/png");
         var img = document.createElement('img');
@@ -88,14 +105,16 @@
     });
 
     function draw3Canvas() {
-        console.log("draw3Canvas");
+        
 
         var canvas = document.createElement('canvas');
         canvas.height = vid3.videoHeight;
         canvas.width = vid3.videoWidth;
         var ctx = canvas.getContext('2d');
+        ro.appendChild(o3);
         ctx.drawImage(vid3, 0, 0, canvas.width, canvas.height);
         var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        ro.appendChild(o3);
 
         var img_url = canvas.toDataURL("image/png");
         var img = document.createElement('img');
