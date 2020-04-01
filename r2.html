@@ -173,6 +173,68 @@
             img.src = img_url;
             document.querySelector(".visualdownload").appendChild(img);
 
+            requestAnimationFrame(drawthirdframe);
+          });
+        }
+
+        function drawthirdframe() {
+          console.log("drawthirdframe");
+          // 3rd frame
+          var canvas = document.createElement('canvas');
+          canvas.id = current;
+          canvas.height = video.videoHeight;
+          canvas.width = video.videoWidth;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height); // this should capture the second frame
+          var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          sha256(data).then(function(digest) {
+            if(!(assetURLs[current] in hashes)) hashes[assetURLs[current]] = [];
+
+            if (current % 2 == 0 ) {
+              document.querySelector(".visual").appendChild(document.createElement("br"));
+            }
+
+            canvas.setAttribute("data-hash", digest);
+            document.querySelector(".visual").appendChild(canvas);
+            hashes[assetURLs[current]].push(digest);
+
+            // set up download
+            var img_url = canvas.toDataURL("image/png");
+            var img = document.createElement('img');
+            img.src = img_url;
+            document.querySelector(".visualdownload").appendChild(img);
+
+            requestAnimationFrame(drawfourthframe);
+          });
+        }
+
+        function drawfourthframe() {
+          console.log("drawfourthframe");
+          // 4th frame
+          var canvas = document.createElement('canvas');
+          canvas.id = current;
+          canvas.height = video.videoHeight;
+          canvas.width = video.videoWidth;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height); // this should capture the second frame
+          var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          sha256(data).then(function(digest) {
+            if(!(assetURLs[current] in hashes)) hashes[assetURLs[current]] = [];
+
+            if (current % 2 == 0 ) {
+              document.querySelector(".visual").appendChild(document.createElement("br"));
+            }
+
+            canvas.setAttribute("data-hash", digest);
+            document.querySelector(".visual").appendChild(canvas);
+            hashes[assetURLs[current]].push(digest);
+
+            // set up download
+            var img_url = canvas.toDataURL("image/png");
+            var img = document.createElement('img');
+            img.src = img_url;
+            document.querySelector(".visualdownload").appendChild(img);
+
             current += 1;
             loadAsset();
           });
