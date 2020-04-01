@@ -16,7 +16,7 @@
 <body>
     <main role="main" class="container">
       <div>
-        <h1>Video Decoding Test Page 3.32</h1>
+        <h1>Video Decoding Test Page 3.33</h1>
         <p class="lead">This page collects some information about your browser, including how it decodes video.<br>
             After collecting, please take the time to fill in some information about your device and submit it to help us understand the data!</p>
         <div class="controls"></div>
@@ -126,7 +126,7 @@
           sha256(data).then(function(digest) {
             if(!(assetURLs[current] in hashes)) hashes[assetURLs[current]] = [];
 
-            if (current % 2 == 0 ) {
+            if (current % 2 == 0 && current != 0) {
               document.querySelector(".visual").appendChild(document.createElement("br"));
             }
 
@@ -150,7 +150,7 @@
         function loopdy_loop() {
           console.log("loopdy_loop");
 
-          if (loopidy_loop < 15) {
+          if (loopidy_loop < 20) {
             loopidy_loop += 1;
             requestAnimationFrame(loopdy_loop);
           } else {
