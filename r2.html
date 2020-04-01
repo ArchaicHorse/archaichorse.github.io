@@ -139,6 +139,7 @@
             var img = document.createElement('img');
             img.src = img_url;
             document.querySelector(".visualdownload").appendChild(img);
+            video.play();
 
             requestAnimationFrame(loopdy_loop);
           });
@@ -148,7 +149,7 @@
 
         // request 30 frames
         function loopdy_loop() {
-          if (loopidy_loop != 30) {
+          if (loopidy_loop != 2) {
             loopidy_loop += 1;
             requestAnimationFrame(loopdy_loop);
           } else {
