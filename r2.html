@@ -16,7 +16,7 @@
 <body>
     <main role="main" class="container">
       <div>
-        <h1>Video Decoding Test Page 3.31</h1>
+        <h1>Video Decoding Test Page 3.32</h1>
         <p class="lead">This page collects some information about your browser, including how it decodes video.<br>
             After collecting, please take the time to fill in some information about your device and submit it to help us understand the data!</p>
         <div class="controls"></div>
@@ -38,7 +38,7 @@
     <script>
         var assetURLs = [
           '8.mp4',
-          'output_frag.mp4',
+          'sfb.mp4',
         ];
         var mimeCodec = 'video/mp4; codecs="avc1.640015"';
         var current = 0;
@@ -147,11 +147,10 @@
 
         var loopidy_loop = 0;
 
-        // request 30 frames
         function loopdy_loop() {
           console.log("loopdy_loop");
 
-          if (loopidy_loop < 20) {
+          if (loopidy_loop < 15) {
             loopidy_loop += 1;
             requestAnimationFrame(loopdy_loop);
           } else {
