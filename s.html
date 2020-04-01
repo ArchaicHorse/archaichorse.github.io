@@ -54,6 +54,8 @@
         var img_url = canvas.toDataURL("image/png");
         var img = document.createElement('img');
         img.src = img_url;
+        var dt = new Date();
+        img.alt = dt.getTime();
         document.querySelector(".vid1div").appendChild(img);
     }
 
@@ -75,6 +77,8 @@
         var img_url = canvas.toDataURL("image/png");
         var img = document.createElement('img');
         img.src = img_url;
+        var dt = new Date();
+        img.alt = dt.getTime();
         document.querySelector(".vid2div").appendChild(img);
     }
 
@@ -96,6 +100,8 @@
         var img_url = canvas.toDataURL("image/png");
         var img = document.createElement('img');
         img.src = img_url;
+        var dt = new Date();
+        img.alt = dt.getTime();
         document.querySelector(".vid3div").appendChild(img);
     }
 
