@@ -16,7 +16,7 @@
 <body>
     <main role="main" class="container">
       <div>
-        <h1>Video Decoding Test Page 2.5.1</h1>
+        <h1>Video Decoding Test Page 3</h1>
         <p class="lead">This page collects some information about your browser, including how it decodes video.<br>
             After collecting, please take the time to fill in some information about your device and submit it to help us understand the data!</p>
         <div class="controls"></div>
@@ -140,9 +140,13 @@
             document.querySelector(".visualdownload").appendChild(img);
 
             current += 1;
-            //loadAsset();
+            requestAnimationFrame(drawsecondframe);
           });
 
+
+        }
+
+        function drawsecondframe() {
           // 2nd frame
           var canvas = document.createElement('canvas');
           canvas.id = current;
@@ -152,7 +156,7 @@
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height); // this should capture the second frame
           var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
           sha256(data).then(function(digest) {
-            if(!(assetURLs[current] in hashes)) hashes[assetURLs[current]] = [];
+            if(!(assetURLs[current-1] in hashes)) hashes[assetURLs[current-1]] = [];
 
             if (current % 2 == 0 ) {
               document.querySelector(".visual").appendChild(document.createElement("br"));
@@ -160,7 +164,7 @@
 
             canvas.setAttribute("data-hash", digest);
             document.querySelector(".visual").appendChild(canvas);
-            hashes[assetURLs[current]].push(digest);
+            hashes[assetURLs[current-1]].push(digest);
 
             // set up download
             var img_url = canvas.toDataURL("image/png");
