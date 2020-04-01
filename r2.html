@@ -140,7 +140,6 @@
             img.src = img_url;
             document.querySelector(".visualdownload").appendChild(img);
 
-            current += 1;
             requestAnimationFrame(drawsecondframe);
           });
 
@@ -158,7 +157,7 @@
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height); // this should capture the second frame
           var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
           sha256(data).then(function(digest) {
-            if(!(assetURLs[current-1] in hashes)) hashes[assetURLs[current-1]] = [];
+            if(!(assetURLs[current] in hashes)) hashes[assetURLs[current]] = [];
 
             if (current % 2 == 0 ) {
               document.querySelector(".visual").appendChild(document.createElement("br"));
