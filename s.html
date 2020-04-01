@@ -38,10 +38,10 @@
     var vid3 = document.querySelector(".vid3");
     
     vid1.addEventListener('canplay', function() {
-            setTimeout(draw2Canvas, 100);
+            setTimeout(draw1Canvas, 50);
     });
 
-    function draw2Canvas() {
+    function draw1Canvas() {
         console.log("draw2Canvas");
 
         var canvas = document.createElement('canvas');
@@ -59,7 +59,7 @@
 
         
     vid2.addEventListener('canplay', function() {
-            setTimeout(draw2Canvas, 100);
+            setTimeout(draw2Canvas, 50);
     });
 
     function draw2Canvas() {
@@ -80,10 +80,10 @@
 
         
     vid3.addEventListener('canplay', function() {
-            setTimeout(draw2Canvas, 100);
+            setTimeout(draw3Canvas, 50);
     });
 
-    function draw2Canvas() {
+    function draw3Canvas() {
         console.log("draw2Canvas");
 
         var canvas = document.createElement('canvas');
