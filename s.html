@@ -6,21 +6,56 @@
 </head>
 
 <body>
-<video width="144" height="82" autoplay>
-    <source src="2.mp4" type="video/mp4">
-</video>
-<br /><br />
+    <div class="vid1div" >
+        <video class="vid1" width="144" height="82" autoplay>
+            <source src="2.mp4" type="video/mp4">
+        </video>
+        <br /><br />
+    </div>
 
-<video width="144" height="82" controls>
-    <source src="sfb.mp4" type="video/mp4">
-</video>
-<br /><br />
+    <div class="vid2div">
+        <video class="vid2" width="144" height="82" controls>
+            <source src="sfb.mp4" type="video/mp4">
+        </video>
+        <br /><br />
+    </div>
 
-<video width="144" height="82" controls>
-    <source src="2.mp4" type="video/mp4">
-</video>
-<br /><br />
+    <div class="vid3div">
+        <video class="vid3" width="144" height="82" controls>
+            <source src="2.mp4" type="video/mp4">
+        </video>
+        <br /><br />
+    </div>
 
+
+<script>
+    var vid1div = document.querySelector(".vid1");
+    var vid2div = document.querySelector(".vid2");
+    var vid3div = document.querySelector(".vid3");
+
+    var vid1 = document.querySelector(".vid1");
+    var vid2 = document.querySelector(".vid2");
+    var vid3 = document.querySelector(".vid3");
+    
+    vid1.addEventListener('canplay', function() {
+            setTimeout(draw2Canvas, 50);
+    });
+
+    function draw2Canvas() {
+        var canvas = document.createElement('canvas');
+        canvas.height = vid1.videoHeight;
+        canvas.width = vid1.videoWidth;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(vid1, 0, 0, canvas.width, canvas.height);
+        var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        var img_url = canvas.toDataURL("image/png");
+        var img = document.createElement('img');
+        img.src = img_url;
+        document.querySelector(".vid1").appendChild(img);
+    }
+
+</script>
 </body>
 
 </html>
