@@ -32,7 +32,7 @@
         let ready_frames = [];
         let underflow = true;
         let time_base = 0;
-        let frame_time = 1000000; // in microseconds
+        let frame_time = 1000; // in milliseconds
         var asset;
 
         function handleFrame(frame) {
@@ -69,9 +69,9 @@
             console.log(frame_time);
             // Based on the frame's timestamp calculate how much of real time waiting
             // is needed before showing the next frame.
-            let time_till_next_frame = calculateTimeTillNextFrame(frame_time);
-            console.log(time_till_next_frame);
-            await delay(time_till_next_frame);
+            //let time_till_next_frame = calculateTimeTillNextFrame(frame_time);
+            //console.log(time_till_next_frame);
+            await delay(frame_time);
             ctx.drawImage(bitmap, 0, 0);
 
             // Immediately schedule rendering of the next frame
