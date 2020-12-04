@@ -50,7 +50,7 @@
         function calculateTimeTillNextFrame(timestamp) {
             if (time_base == 0)
                 time_base = performance.now();
-                
+
             let media_time = performance.now() - time_base;
             return Math.max(0, (timestamp / 1000) - media_time);
         }
@@ -128,7 +128,7 @@
             }
         }
         
-        document.body.onload = downloadVideoChunksFromServer;
+        //document.body.onload = downloadVideoChunksFromServer;
 
         var button = document.createElement("button");
         button.setAttribute("type", "button");
