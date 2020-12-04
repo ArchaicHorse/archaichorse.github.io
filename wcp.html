@@ -39,12 +39,11 @@
         var asset;
 
         function handleFrame(frame) {
-            document.getElementById('status').innerHTML = "<h1> handleframe called </h1>";
             console.log('handling frame ' + handle_count);
             handle_count++;
             ready_frames.push(frame);
-            //if (underflow)
-            //    setTimeout(render_frame, 0);
+            if (underflow)
+                setTimeout(render_frame, 0);
         }
 
         function delay(time_ms) {
@@ -96,7 +95,7 @@
                 const init = {
                     output : handleFrame,
                     error: (e) => {
-                        console.log(e.message);
+                        document.getElementById('status').innerHTML = e.message;
                     }
                 };
 
