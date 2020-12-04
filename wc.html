@@ -112,9 +112,9 @@
                 decoder.configure(config);
                 console.log("created and configured decoder");
                 
-                console.log('creating encoded video chunk from responses ' + i);
+                console.log('creating encoded video chunk');
                 let chunk = new EncodedVideoChunk({
-                    timestamp: 100,
+                    timestamp: 1000,
                     data : asset
                 });
                 decoder.decode(chunk);
