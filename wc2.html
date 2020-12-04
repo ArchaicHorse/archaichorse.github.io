@@ -26,17 +26,20 @@
 
     <script>
         let assetURL = '264/il_avcc.264';
-        
+
         let cnv = document.getElementById('dst');
         let ctx = cnv.getContext('2d', { alpha: false });
         let ready_frames = [];
         let underflow = true;
         let time_base = 0;
         let frame_time = 500; // in milliseconds
+        let handle_count = 0;
+        let render_count = 0;
         var asset;
 
         function handleFrame(frame) {
-            console.log('handling frame');
+            console.log('handling frame ' + handle_count);
+            handle_count++;
             ready_frames.push(frame);
             if (underflow)
                 setTimeout(render_frame, 0);
@@ -57,7 +60,8 @@
         }
 
         async function render_frame() {
-            console.log('rendering frame');
+            console.log('rendering frame ' + render_count);
+            render_count++;
             if (ready_frames.length == 0) {
                 underflow = true;
                 return;
