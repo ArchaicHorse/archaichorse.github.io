@@ -46,6 +46,10 @@
                 setTimeout(render_frame, 0);
         }
 
+        function handleFrame2(frame) {
+            document.getElementById('status').innerHTML = "handleFrame2"
+        }
+
         function delay(time_ms) {
             return new Promise((resolve) => {
                 setTimeout(resolve, time_ms);
@@ -93,7 +97,7 @@
         async function decodeVideo() {
             if ("VideoDecoder" in window) {
                 const init = {
-                    output : handleFrame,
+                    output : handleFrame2,
                     error: (e) => {
                         document.getElementById('status').innerHTML = e.message;
                     }
@@ -126,7 +130,7 @@
                 
                 decoder.decode(chunk);
 
-                //await decoder.flush();
+                await decoder.flush();
             } else {
                 document.body.innerHTML = "<h1>WebCodecs API is not supported.</h1>";
                 return;
