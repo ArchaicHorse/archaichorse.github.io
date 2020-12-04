@@ -16,7 +16,8 @@
 <body>
     <main role="main" class="container">
         <div>
-            <h1>WebCodecs Video Decoding Test Page 1</h1>
+            <h1>WebCodecs Video Decoding Test Page 3</h1>
+            <div id="status"></div>
             <hr>
             <canvas id="dst"></canvas>
             <hr>
@@ -70,11 +71,6 @@
             underflow = false;
 
             let bitmap = await frame.createImageBitmap();
-            //console.log(frame_time);
-            // Based on the frame's timestamp calculate how much of real time waiting
-            // is needed before showing the next frame.
-            //let time_till_next_frame = calculateTimeTillNextFrame(frame_time);
-            //console.log(time_till_next_frame);
             await delay(frame_time);
             ctx.drawImage(bitmap, 0, 0);
 
@@ -89,7 +85,8 @@
             xhr.responseType = 'arraybuffer';
             xhr.onload = function () { 
               asset = xhr.response;
-              decodeVideo();
+              document.getElementById('status').innerHTML = "<h1>Vid loaded</h1>"
+              //decodeVideo();
             };
             xhr.send();
         }
