@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         canvas {
-        			max-width: 144px;
-        			max-height: 82px;
+        			width: 144px;
+        			height: 82px;
         		}
     </style>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
@@ -17,11 +17,11 @@
     <main role="main" class="container">
         <div>
             <h1>WebCodecs Video Decoding Test Page 1</h1>
-            
-            <div class="controls"></div>
+            <hr>
             <canvas id="dst"></canvas>
             <hr>
-          </div>
+            <div class="controls"></div>
+        </div>
     </main>
 
     <script>
@@ -50,6 +50,7 @@
         function calculateTimeTillNextFrame(timestamp) {
             if (time_base == 0)
                 time_base = performance.now();
+                
             let media_time = performance.now() - time_base;
             return Math.max(0, (timestamp / 1000) - media_time);
         }
@@ -110,13 +111,14 @@
 
                 let decoder = new VideoDecoder(init);
                 decoder.configure(config);
-                console.log("created and configured decoder");
                 
                 console.log('creating encoded video chunk');
+
                 let chunk = new EncodedVideoChunk({
                     timestamp: 1000,
                     data : asset
                 });
+
                 decoder.decode(chunk);
                 
                 await decoder.flush();
@@ -125,6 +127,8 @@
                 return;
             }
         }
+        
+        document.body.onload = downloadVideoChunksFromServer;
 
         var button = document.createElement("button");
         button.setAttribute("type", "button");
