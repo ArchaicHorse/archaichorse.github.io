@@ -85,8 +85,7 @@
             xhr.responseType = 'arraybuffer';
             xhr.onload = function () { 
               asset = xhr.response;
-              document.getElementById('status').innerHTML = "<h1>Vid loaded</h1>"
-              //decodeVideo();
+              decodeVideo();
             };
             xhr.send();
         }
@@ -125,8 +124,8 @@
 
                 handle_count = 0;
                 render_count = 0;
-
-                decoder.decode(chunk);
+                document.getElementById('status').innerHTML = "<h1> decoder created and configured </h1>";
+                //decoder.decode(chunk);
                 
                 await decoder.flush();
             } else {
