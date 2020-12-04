@@ -113,6 +113,10 @@
                 };
 
                 let decoder = new VideoDecoder(init);
+                document.getElementById('status').innerHTML = "<h1> decoder created </h1>";
+                
+
+                /*
                 decoder.configure(config);
                 
                 console.log('creating encoded video chunk');
@@ -124,8 +128,9 @@
 
                 handle_count = 0;
                 render_count = 0;
-                document.getElementById('status').innerHTML = "<h1> decoder created and configured </h1>";
-                //decoder.decode(chunk);
+                
+                decoder.decode(chunk);
+                */
                 
                 await decoder.flush();
             } else {
