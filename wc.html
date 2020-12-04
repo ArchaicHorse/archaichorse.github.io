@@ -110,16 +110,15 @@
 
                 let decoder = new VideoDecoder(init);
                 decoder.configure(config);
-
-                let responses = asset; 
-                for (let i = 0; i < responses.length; i++) {
-                    console.log('creating encoded video chunk from responses ' + i);
-                    let chunk = new EncodedVideoChunk({
-                        timestamp: responses[i].timestamp,
-                        data : new Uint8Array(responses[i].body)
-                    });
-                    decoder.decode(chunk);
-                }
+                console.log("created and configured decoder");
+                
+                console.log('creating encoded video chunk from responses ' + i);
+                let chunk = new EncodedVideoChunk({
+                    timestamp: 100,
+                    data : asset
+                });
+                decoder.decode(chunk);
+                
                 await decoder.flush();
             } else {
                 document.body.innerHTML = "<h1>WebCodecs API is not supported.</h1>";
