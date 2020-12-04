@@ -39,11 +39,12 @@
         var asset;
 
         function handleFrame(frame) {
+            document.getElementById('status').innerHTML = "<h1> handleframe called </h1>";
             console.log('handling frame ' + handle_count);
             handle_count++;
             ready_frames.push(frame);
-            if (underflow)
-                setTimeout(render_frame, 0);
+            //if (underflow)
+            //    setTimeout(render_frame, 0);
         }
 
         function delay(time_ms) {
@@ -125,10 +126,8 @@
                 render_count = 0;
                 
                 decoder.decode(chunk);
-                document.getElementById('status').innerHTML = "<h1> decoder decode called </h1>";
-                /*
-                await decoder.flush();
-                */
+
+                //await decoder.flush();
             } else {
                 document.body.innerHTML = "<h1>WebCodecs API is not supported.</h1>";
                 return;
