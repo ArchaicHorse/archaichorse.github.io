@@ -113,12 +113,9 @@
                 };
 
                 let decoder = new VideoDecoder(init);
-                document.getElementById('status').innerHTML = "<h1> decoder created </h1>";
-                
-
-                /*
                 decoder.configure(config);
-                
+                document.getElementById('status').innerHTML = "<h1> decoder configured </h1>";
+                /*
                 console.log('creating encoded video chunk');
 
                 let chunk = new EncodedVideoChunk({
