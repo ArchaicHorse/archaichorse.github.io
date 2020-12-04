@@ -32,7 +32,7 @@
         let ready_frames = [];
         let underflow = true;
         let time_base = 0;
-        let frame_time = 500; // in milliseconds
+        let frame_time = 100; // in milliseconds
         let handle_count = 0;
         let render_count = 0;
         var asset;
@@ -70,7 +70,7 @@
             underflow = false;
 
             let bitmap = await frame.createImageBitmap();
-            console.log(frame_time);
+            //console.log(frame_time);
             // Based on the frame's timestamp calculate how much of real time waiting
             // is needed before showing the next frame.
             //let time_till_next_frame = calculateTimeTillNextFrame(frame_time);
@@ -125,6 +125,9 @@
                     timestamp: frame_time,
                     data : asset
                 });
+                
+                handle_count = 0;
+                render_count = 0;
 
                 decoder.decode(chunk);
                 
