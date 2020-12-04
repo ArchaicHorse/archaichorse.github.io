@@ -65,9 +65,11 @@
             underflow = false;
 
             let bitmap = await frame.createImageBitmap();
+            console.log(frame.timestamp);
             // Based on the frame's timestamp calculate how much of real time waiting
             // is needed before showing the next frame.
             let time_till_next_frame = calculateTimeTillNextFrame(frame.timestamp);
+            console.log(time_till_next_frame);
             await delay(time_till_next_frame);
             ctx.drawImage(bitmap, 0, 0);
 
