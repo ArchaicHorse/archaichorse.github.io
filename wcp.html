@@ -46,10 +46,6 @@
                 setTimeout(render_frame, 0);
         }
 
-        function handleFrame2(frame) {
-            document.getElementById('status').innerHTML = "handleFrame2"
-        }
-
         function delay(time_ms) {
             return new Promise((resolve) => {
                 setTimeout(resolve, time_ms);
@@ -97,7 +93,7 @@
         async function decodeVideo() {
             if ("VideoDecoder" in window) {
                 const init = {
-                    output : handleFrame2,
+                    output : handleFrame, //TODO: callback seems to not work on Android?
                     error: (e) => {
                         document.getElementById('status').innerHTML = e.message;
                     }
@@ -128,7 +124,7 @@
                 handle_count = 0;
                 render_count = 0;
                 
-                decoder.decode(chunk);
+                decoder.decode(chunk); // TODO: callback an issue in Chrome 86
 
                 await decoder.flush();
             } else {
