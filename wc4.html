@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         canvas {
-        			width: 144px;
+        			width: 144;
         			height: 82px;
         		}
     </style>
@@ -16,7 +16,7 @@
 <body>
     <main role="main" class="container">
         <div>
-            <h1>WebCodecs Video Decoding Test Page 1</h1>
+            <h1>WebCodecs Video Decoding Test Page 2</h1>
             <h2 id="filename"></h2>
             <hr>
             <canvas id="dst"></canvas>
@@ -26,7 +26,7 @@
     </main>
 
     <script>
-        let assetURL = '264/of_avcc_complete.264';
+        let assetURL = '264/of_annexb_vcl.264';
         document.getElementById('filename').innerHTML = assetURL;
 
         var button = document.createElement("button");
