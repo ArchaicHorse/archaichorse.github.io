@@ -85,8 +85,8 @@ async function decodeVideo() {
                 0x00, 0x03, 0x00, 0x40, 0x00, 0x00, 0x0F, 0x03, 0xC5, 0x0A, 
                 0x65, 0x80, 0x01, 0x00, 0x05, 0x68, 0xEB, 0xEC, 0xB2, 0x2C
             ]), 
-            codedWidth: 144,
-            codedHeight: 82,
+            codedWidth: cnv.width,
+            codedHeight: cnv.height,
         };
 
         let decoder = new VideoDecoder(init);
