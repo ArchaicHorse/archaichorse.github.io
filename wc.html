@@ -17,6 +17,7 @@
     <main role="main" class="container">
         <div>
             <h1>WebCodecs Video Decoding Test Page 1</h1>
+            <h2 id="filename"></h2>
             <hr>
             <canvas id="dst"></canvas>
             <hr>
@@ -26,7 +27,7 @@
 
     <script>
         let assetURL = '264/of_avcc_no_extradata2.264'
-
+        document.getElementById('filename').innerHTML = assetURL;
         let cnv = document.getElementById('dst');
         let ctx = cnv.getContext('2d', { alpha: false });
         let ready_frames = [];
