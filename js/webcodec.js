@@ -34,6 +34,7 @@ function calculateTimeTillNextFrame(timestamp) {
 
 async function render_frame() {
     console.log('rendering frame ' + render_count);
+    document.getElementById('frame_count').innerHTML = "Frame #: " + render_count;
     render_count++;
     if (ready_frames.length == 0) {
         underflow = true;
