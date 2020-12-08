@@ -56,18 +56,18 @@ async function render_frame() {
     frame.destroy();
 }
 
-function loadVideo(assetURL) {
+function loadVideo(assetURL, avcC) {
     var xhr = new XMLHttpRequest;
     xhr.open('get', assetURL);
     xhr.responseType = 'arraybuffer';
     xhr.onload = function () { 
         asset = xhr.response;
-        decodeVideo();
+        decodeVideo(avcC);
     };
     xhr.send();
 }
 
-async function decodeVideo() {
+async function decodeVideo(avcC) {
     if ("VideoDecoder" in window) {
         const init = {
             output : handleFrame,
@@ -78,13 +78,7 @@ async function decodeVideo() {
 
         const config = {
             codec: "avc1.640015",
-            description : new Uint8Array(// avcC atom from MP4 containing SPS and PPS
-            [ 
-                0x01, 0x64, 0x00, 0x0B, 0xFF, 0xE1, 0x00, 0x18, 0x67, 0x64, 
-                0x00, 0x0B, 0xAC, 0xD9, 0x42, 0x4D, 0xF8, 0x88, 0x40, 0x00, 
-                0x00, 0x03, 0x00, 0x40, 0x00, 0x00, 0x0F, 0x03, 0xC5, 0x0A, 
-                0x65, 0x80, 0x01, 0x00, 0x05, 0x68, 0xEB, 0xEC, 0xB2, 0x2C
-            ]), 
+            description : avcC, 
             codedWidth: cnv.width,
             codedHeight: cnv.height,
         };
