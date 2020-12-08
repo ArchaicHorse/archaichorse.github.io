@@ -75,25 +75,25 @@ async function decodeVideo(assetURL, avcC) {
 
         let decoder = new VideoDecoder(init);
         decoder.configure(config);
-        
+
         console.log('creating encoded video chunk');
-        let content;
+
         (await fetch(assetURL)).arrayBuffer().then(function(buffer) {
-            content = buffer;
+            let chunk = new EncodedVideoChunk({
+                type : "key",
+                timestamp: frame_time,
+                data : buffer,
+            });
+    
+            handle_count = 0;
+            render_count = 0;
+    
+            decoder.decode(chunk);
+            
+            await decoder.flush();
         });
 
-        let chunk = new EncodedVideoChunk({
-            type : "key",
-            timestamp: frame_time,
-            data : content,
-        });
 
-        handle_count = 0;
-        render_count = 0;
-
-        decoder.decode(chunk);
-        
-        await decoder.flush();
     } else {
         document.body.innerHTML = "<h1>WebCodecs API is not supported.</h1>";
         return;
