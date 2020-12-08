@@ -78,7 +78,7 @@ async function decodeVideo(assetURL, avcC) {
 
         console.log('creating encoded video chunk');
 
-        (await fetch(assetURL)).arrayBuffer().then(function(buffer) {
+        (await fetch(assetURL)).arrayBuffer().then(async function(buffer) {
             let chunk = new EncodedVideoChunk({
                 type : "key",
                 timestamp: frame_time,
@@ -99,5 +99,3 @@ async function decodeVideo(assetURL, avcC) {
         return;
     }
 }
-
-//document.body.onload = loadVideo;
