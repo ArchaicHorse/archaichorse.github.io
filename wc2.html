@@ -31,8 +31,18 @@
             <hr>
             <div class="controls"></div>
             <hr>
-            <h3 id="frame_count">Frame #: 0</h3>
-            <canvas id="dst"></canvas>
+            <div style="width: 100%; overflow: hidden;">
+                <div style="width: 400px; float: left;"> 
+                    <h3 id="frame_count">Frame #: 0</h3>
+                    <h4 id="coded_width">codedWidth: </h4>
+                    <h4 id="coded_height">codedHeight: </h4>
+                    <h4 id="display_width">displayWidth: </h4>
+                    <h4 id="display_height">displayHeight: </h4>
+                </div>
+                <div style="margin-left: 400px;"> 
+                    <canvas id="dst"></canvas>
+                </div>
+            </div>
         </div>
     </main>
 

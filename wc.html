@@ -17,12 +17,22 @@
     <main role="main" class="container">
         <div>
             <h1>WebCodecs Video Decoding Test Page 1</h1>
-            <h2 id="filename"></h2>
+            <h2 id="filename">File: </h2>
             <hr>
-            <canvas id="dst"></canvas>
-            <hr>
-            <h3 id="frame_count">Frame #: 0</h3>
             <div class="controls"></div>
+            <hr>
+            <div style="width: 100%; overflow: hidden;">
+                <div style="width: 400px; float: left;"> 
+                    <h3 id="frame_count">Frame #: 0</h3>
+                    <h4 id="coded_width">codedWidth: </h4>
+                    <h4 id="coded_height">codedHeight: </h4>
+                    <h4 id="display_width">displayWidth: </h4>
+                    <h4 id="display_height">displayHeight: </h4>
+                </div>
+                <div style="margin-left: 400px;"> 
+                    <canvas id="dst"></canvas>
+                </div>
+            </div>
         </div>
     </main>
 

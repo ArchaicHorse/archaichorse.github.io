@@ -24,17 +24,9 @@ function delay(time_ms) {
     });
 }
 
-function calculateTimeTillNextFrame(timestamp) {
-    if (time_base == 0)
-        time_base = performance.now();
-
-    let media_time = performance.now() - time_base;
-    return Math.max(0, (timestamp / 1000) - media_time);
-}
-
 async function render_frame() {
     console.log('rendering frame ' + render_count);
-    document.getElementById('frame_count').innerHTML = "Frame #: " + render_count;
+    
     render_count++;
     if (ready_frames.length == 0) {
         underflow = true;
@@ -43,12 +35,18 @@ async function render_frame() {
     let frame = ready_frames.shift();
     underflow = false;
 
+    try {
+        document.getElementById('frame_count').innerHTML = "Frame #: " + render_count;
+        document.getElementById("coded_width").innerHTML = "codedWidth: " + frame.codedWidth;
+        document.getElementById("coded_height").innerHTML = "codedHeight: " + frame.codedHeight;
+        document.getElementById("display_width").innerHTML = "displayWidth: " + frame.displayWidth;
+        document.getElementById("display_height").innerHTML = "displayHeight: " + frame.displayHeight;
+    } catch(err) {
+        document.getElementById('filename').innerHTML = "Error: " + err.message;
+    }
+
     let bitmap = await frame.createImageBitmap();
-    //console.log(frame_time);
-    // Based on the frame's timestamp calculate how much of real time waiting
-    // is needed before showing the next frame.
-    //let time_till_next_frame = calculateTimeTillNextFrame(frame_time);
-    //console.log(time_till_next_frame);
+
     await delay(frame_time);
     ctx.drawImage(bitmap, 0, 0);
 
