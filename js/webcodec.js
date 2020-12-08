@@ -2,41 +2,19 @@
 
 let cnv = document.getElementById('dst');
 let ctx = cnv.getContext('2d', { alpha: false });
-let ready_frames = [];
+let readyFrames = [];
 let underflow = true;
-let time_base = 0;
-let frame_time = 100; // in milliseconds
-let handle_count = 0;
-let render_count = 0;
+let frameTime = 50; // in milliseconds
+let handleCount = 0;
+let renderCount = 0;
+let statsDisplayed = false;
+
 var asset;
 
-function handleFrame(frame) {
-    console.log('handling frame ' + handle_count);
-    handle_count++;
-    ready_frames.push(frame);
-    if (underflow)
-        setTimeout(render_frame, 0);
-}
 
-function delay(time_ms) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, time_ms);
-    });
-}
-
-async function render_frame() {
-    console.log('rendering frame ' + render_count);
-    
-    render_count++;
-    if (ready_frames.length == 0) {
-        underflow = true;
-        return;
-    }
-    let frame = ready_frames.shift();
-    underflow = false;
-
+function displayStats(){
     try {
-        document.getElementById('frame_count').innerHTML = "Frame #: " + render_count;
+        document.getElementById('frame_count').innerHTML = "Frame #: " + renderCount;
         document.getElementById("coded_width").innerHTML = "codedWidth: " + frame.codedWidth;
         document.getElementById("coded_height").innerHTML = "codedHeight: " + frame.codedHeight;
         document.getElementById("display_width").innerHTML = "displayWidth: " + frame.displayWidth;
@@ -47,14 +25,45 @@ async function render_frame() {
     } catch(err) {
         document.getElementById('filename').innerHTML = "Error: " + err.message;
     }
+}
+
+function handleFrame(frame) {
+    console.log('handling frame ' + handleCount);
+    handleCount++;
+    readyFrames.push(frame);
+    if (underflow)
+        setTimeout(renderFrame, 0);
+}
+
+function delay(time_ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, time_ms);
+    });
+}
+
+async function renderFrame() {
+    console.log('rendering frame ' + renderCount);
+    
+    renderCount++;
+    if (readyFrames.length == 0) {
+        underflow = true;
+        return;
+    }
+    let frame = readyFrames.shift();
+    underflow = false;
+
+    if (!statsDisplayed) {
+        displayStats();
+        statsDisplayed = true;
+    }
 
     let bitmap = await frame.createImageBitmap();
 
-    await delay(frame_time);
+    await delay(frameTime);
     ctx.drawImage(bitmap, 0, 0);
 
     // Immediately schedule rendering of the next frame
-    setTimeout(render_frame, 0);
+    setTimeout(renderFrame, 0);
     frame.destroy();
 }
 
@@ -82,12 +91,13 @@ async function decodeVideo(assetURL, avcC) {
         (await fetch(assetURL)).arrayBuffer().then(async function(buffer) {
             let chunk = new EncodedVideoChunk({
                 type : "key",
-                timestamp: frame_time,
+                timestamp: frameTime,
                 data : buffer,
             });
     
-            handle_count = 0;
-            render_count = 0;
+            handleCount = 0;
+            renderCount = 0;
+            statsDisplayed = false;
     
             decoder.decode(chunk);
             
