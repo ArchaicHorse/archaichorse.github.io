@@ -89,6 +89,7 @@ async function decodeVideo(avcC) {
         console.log('creating encoded video chunk');
 
         let chunk = new EncodedVideoChunk({
+            type : "key",
             timestamp: frame_time,
             data : asset
         });
