@@ -12,7 +12,7 @@ let statsDisplayed = false;
 var asset;
 
 
-function displayStats(){
+function displayStats(frame){
     try {
         document.getElementById('frame_count').innerHTML = "Frame #: " + renderCount;
         document.getElementById("coded_width").innerHTML = "codedWidth: " + frame.codedWidth;
@@ -52,14 +52,14 @@ async function renderFrame() {
     let frame = readyFrames.shift();
     underflow = false;
 
-    if (!statsDisplayed) {
-        displayStats();
-        statsDisplayed = true;
-    }
-
     let bitmap = await frame.createImageBitmap();
 
     await delay(frameTime);
+    if (!statsDisplayed) {
+        displayStats(frame);
+        statsDisplayed = true;
+    }
+    
     ctx.drawImage(bitmap, 0, 0);
 
     // Immediately schedule rendering of the next frame
