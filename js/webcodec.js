@@ -41,6 +41,9 @@ async function render_frame() {
         document.getElementById("coded_height").innerHTML = "codedHeight: " + frame.codedHeight;
         document.getElementById("display_width").innerHTML = "displayWidth: " + frame.displayWidth;
         document.getElementById("display_height").innerHTML = "displayHeight: " + frame.displayHeight;
+
+        cnv.width = frame.displayWidth;
+        cnv.height = frame.displayHeight;
     } catch(err) {
         document.getElementById('filename').innerHTML = "Error: " + err.message;
     }
