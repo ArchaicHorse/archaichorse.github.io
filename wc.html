@@ -44,7 +44,7 @@
         button.setAttribute("class", "btn btn-primary");
         button.innerHTML = "Play Video";
         button.addEventListener("click", function() {
-            loadVideo(assetURL, avcC);
+            decodeVideo(assetURL, avcC);
         });
 
         document.querySelector(".controls").appendChild(button);

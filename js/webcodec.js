@@ -57,18 +57,7 @@ async function render_frame() {
     frame.destroy();
 }
 
-function loadVideo(assetURL, avcC) {
-    var xhr = new XMLHttpRequest;
-    xhr.open('get', assetURL);
-    xhr.responseType = 'arraybuffer';
-    xhr.onload = function () { 
-        asset = xhr.response;
-        decodeVideo(avcC);
-    };
-    xhr.send();
-}
-
-async function decodeVideo(avcC) {
+async function decodeVideo(assetURL, avcC) {
     if ("VideoDecoder" in window) {
         const init = {
             output : handleFrame,
@@ -92,7 +81,7 @@ async function decodeVideo(avcC) {
         let chunk = new EncodedVideoChunk({
             type : "key",
             timestamp: frame_time,
-            data : asset
+            data : (await fetch(assetURL)).arrayBuffer(),
         });
 
         handle_count = 0;
