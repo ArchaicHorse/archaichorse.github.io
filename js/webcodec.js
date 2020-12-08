@@ -58,6 +58,9 @@ async function renderFrame() {
     if (!statsDisplayed) {
         displayStats(frame);
         statsDisplayed = true;
+    } else {
+        // just update the frame count
+        document.getElementById('frame_count').innerHTML = "Frame #: " + renderCount;
     }
     
     ctx.drawImage(bitmap, 0, 0);
