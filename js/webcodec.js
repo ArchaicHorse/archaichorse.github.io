@@ -67,10 +67,10 @@ async function decodeVideo(assetURL, avcC) {
         };
 
         const config = {
-            codec: "avc1.640015",
+            codec: "avc1.64000a",
             description : avcC, 
-            codedWidth: cnv.width/4,
-            codedHeight: cnv.height/4,
+            codedWidth: cnv.width,
+            codedHeight: cnv.height,
         };
 
         let decoder = new VideoDecoder(init);
