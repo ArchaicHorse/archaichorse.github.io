@@ -56,6 +56,7 @@
         let renderCount = 0;
         let statsDisplayed = false;
         let canvID = '';
+        let frameTime = 50; // in milliseconds
 
         let readyFrames1 = [];
         let underflow1 = true;
@@ -129,7 +130,6 @@
             underflow = false;
 
             let bitmap = await frame.createImageBitmap();
-            let frameTime = 50; // in milliseconds
             await delay(frameTime);
             if (!statsDisplayed) {
                 displayStats(frame);
@@ -160,7 +160,6 @@
             underflow1 = false;
 
             let bitmap = await frame.createImageBitmap();
-            let frameTime = 50; // in milliseconds
             await delay(frameTime);
             if (!statsDisplayed1) {
                 displayStats(frame, '1');
@@ -191,7 +190,6 @@
             underflow2 = false;
 
             let bitmap = await frame.createImageBitmap();
-            let frameTime = 50; // in milliseconds
             await delay(frameTime);
             if (!statsDisplayed2) {
                 displayStats(frame, "2");
@@ -300,7 +298,7 @@
         b3.addEventListener("click", async function() {
             if ("VideoDecoder" in window) {
                 canvID = '';
-                
+
                 let cnv1 = document.getElementById('dst1');
                 let cnv2 = document.getElementById('dst2');
                 const init1 = {
