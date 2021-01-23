@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        canvas {
+        			max-width: 640px;
+        			max-height: 480px;
+        		}
+    </style>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+</head>
+
+<body>
+    <main role="main" class="container">
+        <div>
+            <h1>WebCodecs Video Decoding Test Page 3</h1>
+            <div class="controls"></div>
+            <hr>
+            <h2 id="filename1">File: </h2>
+            <div style="width: 100%; overflow: hidden;">
+                <div style="width: 400px; float: left;"> 
+                    <h3 id="frame_count1">Frame #: 0</h3>
+                    <h4 id="coded_width1">codedWidth: </h4>
+                    <h4 id="coded_height1">codedHeight: </h4>
+                    <h4 id="display_width1">displayWidth: </h4>
+                    <h4 id="display_height1">displayHeight: </h4>
+                </div>
+                <div style="margin-left: 300px;"> 
+                    <canvas id="dst1"></canvas>
+                </div>
+            </div>
+            <hr>
+            <h2 id="filename2">File: </h2>
+            <div style="width: 100%; overflow: hidden;">
+                <div style="width: 400px; float: left;"> 
+                    <h3 id="frame_count2">Frame #: 0</h3>
+                    <h4 id="coded_width2">codedWidth: </h4>
+                    <h4 id="coded_height2">codedHeight: </h4>
+                    <h4 id="display_width2">displayWidth: </h4>
+                    <h4 id="display_height2">displayHeight: </h4>
+                </div>
+                <div style="margin-left: 300px;"> 
+                    <canvas id="dst2"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        var b1 = document.createElement("button");
+        b1.setAttribute("type", "button");
+        b1.setAttribute("class", "btn btn-primary");
+        b1.innerHTML = "Play Video 1";
+        b1.addEventListener("click", function() {
+            var assetURL = '264/tf_avcc.264';
+            var avcC = new Uint8Array([ // avcC atom from MP4 containing SPS and PPS
+                0x01, 0x42, 0xC0, 0x1E, 0xFF, 0xE1, 0x00, 0x1A, 0x67, 0x42, 
+                0xC0, 0x1E, 0x9A, 0x72, 0x03, 0xC1, 0x7F, 0xCB, 0x80, 0x88, 
+                0x00, 0x00, 0x03, 0x00, 0x08, 0x00, 0x00, 0x03, 0x01, 0xE0, 
+                0x78, 0xB1, 0x72, 0x40, 0x01, 0x00, 0x04, 0x68, 0xCE, 0x32, 
+                0xC8
+            ]);
+            var canvID = "1";
+            decodeVideo(assetURL, avcC, canvID);
+        });
+
+        document.querySelector(".controls").appendChild(b1);
+
+        var b2 = document.createElement("button");
+        b2.setAttribute("type", "button");
+        b2.setAttribute("class", "btn btn-primary");
+        b2.innerHTML = "Play Video 2";
+        b2.addEventListener("click", function() {
+            var assetURL = '264/il_avcc.264';
+            var avcC = new Uint8Array([ // avcC atom from MP4 containing SPS and PPS
+                0x01, 0x64, 0x00, 0x0B, 0xFF, 0xE1, 0x00, 0x18, 0x67, 0x64, 
+                0x00, 0x0B, 0xAC, 0xD9, 0x42, 0x4D, 0xF8, 0x88, 0x40, 0x00, 
+                0x00, 0x03, 0x00, 0x40, 0x00, 0x00, 0x0F, 0x03, 0xC5, 0x0A, 
+                0x65, 0x80, 0x01, 0x00, 0x05, 0x68, 0xEB, 0xEC, 0xB2, 0x2C
+            ]);
+            var canvID = "2";
+            decodeVideo(assetURL, avcC, canvID);
+        });
+
+        document.querySelector(".controls").appendChild(b2);
+
+        var b3 = document.createElement("button");
+        b3.setAttribute("type", "button");
+        b3.setAttribute("class", "btn btn-primary");
+        b3.innerHTML = "Play Both";
+        b3.addEventListener("click", function() {
+            var assetURL = '264/tf_avcc.264';
+            var avcC = new Uint8Array([ // avcC atom from MP4 containing SPS and PPS
+                0x01, 0x42, 0xC0, 0x1E, 0xFF, 0xE1, 0x00, 0x1A, 0x67, 0x42, 
+                0xC0, 0x1E, 0x9A, 0x72, 0x03, 0xC1, 0x7F, 0xCB, 0x80, 0x88, 
+                0x00, 0x00, 0x03, 0x00, 0x08, 0x00, 0x00, 0x03, 0x01, 0xE0, 
+                0x78, 0xB1, 0x72, 0x40, 0x01, 0x00, 0x04, 0x68, 0xCE, 0x32, 
+                0xC8
+            ]);
+            var canvID = "1";
+            decodeVideo(assetURL, avcC, canvID);
+
+            var assetURL1 = '264/il_avcc.264';
+            var avcC1 = new Uint8Array([ // avcC atom from MP4 containing SPS and PPS
+                0x01, 0x64, 0x00, 0x0B, 0xFF, 0xE1, 0x00, 0x18, 0x67, 0x64, 
+                0x00, 0x0B, 0xAC, 0xD9, 0x42, 0x4D, 0xF8, 0x88, 0x40, 0x00, 
+                0x00, 0x03, 0x00, 0x40, 0x00, 0x00, 0x0F, 0x03, 0xC5, 0x0A, 
+                0x65, 0x80, 0x01, 0x00, 0x05, 0x68, 0xEB, 0xEC, 0xB2, 0x2C
+            ]);
+            var canvID1 = "2";
+            decodeVideo(assetURL1, avcC1, canvID1);
+        });
+
+        document.querySelector(".controls").appendChild(b3);
+    </script>
+    <script src="js/webcodec.js"></script>
+</body>
+
+</html>

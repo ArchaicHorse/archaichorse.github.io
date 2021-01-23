@@ -1,29 +1,24 @@
-
-
-let cnv = document.getElementById('dst');
-let ctx = cnv.getContext('2d', { alpha: false });
 let readyFrames = [];
 let underflow = true;
 let frameTime = 50; // in milliseconds
 let handleCount = 0;
 let renderCount = 0;
 let statsDisplayed = false;
-
-var asset;
-
+let canvID = "";
 
 function displayStats(frame){
+    let cnv = document.getElementById('dst' + canvID);
     try {
-        document.getElementById('frame_count').innerHTML = "Frame #: " + renderCount;
-        document.getElementById("coded_width").innerHTML = "codedWidth: " + frame.codedWidth;
-        document.getElementById("coded_height").innerHTML = "codedHeight: " + frame.codedHeight;
-        document.getElementById("display_width").innerHTML = "displayWidth: " + frame.displayWidth;
-        document.getElementById("display_height").innerHTML = "displayHeight: " + frame.displayHeight;
+        document.getElementById('frame_count' + canvID).innerHTML = "Frame #: " + renderCount;
+        document.getElementById("coded_width" + canvID).innerHTML = "codedWidth: " + frame.codedWidth;
+        document.getElementById("coded_height" + canvID).innerHTML = "codedHeight: " + frame.codedHeight;
+        document.getElementById("display_width" + canvID).innerHTML = "displayWidth: " + frame.displayWidth;
+        document.getElementById("display_height" + canvID).innerHTML = "displayHeight: " + frame.displayHeight;
 
         cnv.width = frame.displayWidth;
         cnv.height = frame.displayHeight;
     } catch(err) {
-        document.getElementById('filename').innerHTML = "Error: " + err.message;
+        document.getElementById('filename' + canvID).innerHTML = "Error: " + err.message;
     }
 }
 
@@ -62,7 +57,9 @@ async function renderFrame() {
         // just update the frame count
         document.getElementById('frame_count').innerHTML = "Frame #: " + renderCount;
     }
-    
+    let cnv = document.getElementById('dst' + canvID);
+    let ctx = cnv.getContext('2d', { alpha: false });
+
     ctx.drawImage(bitmap, 0, 0);
 
     // Immediately schedule rendering of the next frame
@@ -70,8 +67,10 @@ async function renderFrame() {
     frame.destroy();
 }
 
-async function decodeVideo(assetURL, avcC) {
+async function decodeVideo(assetURL, avcC, curID="") {
     if ("VideoDecoder" in window) {
+        canvID = curID;
+        let cnv = document.getElementById('dst' + canvID);
         const init = {
             output : handleFrame,
             error: (e) => {
