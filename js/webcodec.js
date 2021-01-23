@@ -55,7 +55,7 @@ async function renderFrame() {
         statsDisplayed = true;
     } else {
         // just update the frame count
-        document.getElementById('frame_count').innerHTML = "Frame #: " + renderCount;
+        document.getElementById('frame_count' + canvID).innerHTML = "Frame #: " + renderCount;
     }
     let cnv = document.getElementById('dst' + canvID);
     let ctx = cnv.getContext('2d', { alpha: false });
@@ -64,7 +64,7 @@ async function renderFrame() {
 
     // Immediately schedule rendering of the next frame
     setTimeout(renderFrame, 0);
-    frame.destroy();
+    frame.close();
 }
 
 async function decodeVideo(assetURL, avcC, curID="") {
