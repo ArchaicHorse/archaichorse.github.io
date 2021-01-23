@@ -136,9 +136,9 @@
                 statsDisplayed = true;
             } else {
                 // just update the frame count
-                document.getElementById('frame_count').innerHTML = "Frame #: " + renderCount;
+                document.getElementById('frame_count' + canvID).innerHTML = "Frame #: " + renderCount;
             }
-            let cnv = document.getElementById('dst');
+            let cnv = document.getElementById('dst' + canvID);
             let ctx = cnv.getContext('2d', { alpha: false });
 
             ctx.drawImage(bitmap, 0, 0);
