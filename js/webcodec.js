@@ -1,6 +1,5 @@
 let readyFrames = [];
 let underflow = true;
-let frameTime = 50; // in milliseconds
 let handleCount = 0;
 let renderCount = 0;
 let statsDisplayed = false;
@@ -48,7 +47,7 @@ async function renderFrame() {
     underflow = false;
 
     let bitmap = await frame.createImageBitmap();
-
+    let frameTime = 50; // in milliseconds
     await delay(frameTime);
     if (!statsDisplayed) {
         displayStats(frame);

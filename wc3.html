@@ -50,23 +50,238 @@
     </main>
 
     <script>
+        let readyFrames = [];
+        let underflow = true;
+        let handleCount = 0;
+        let renderCount = 0;
+        let statsDisplayed = false;
+        let canvID = '';
+
+        let readyFrames1 = [];
+        let underflow1 = true;
+        let handleCount1 = 0;
+        let renderCount1 = 0;
+        let statsDisplayed1 = false;
+
+        let readyFrames2 = [];
+        let underflow2 = true;
+        let handleCount2 = 0;
+        let renderCount2 = 0;
+        let statsDisplayed2 = false;
+
+        function displayStats(frame, curID = ''){
+            if (canvID != '') {
+                curID = canvID;
+            }
+            let cnv = document.getElementById('dst' + curID);
+            try {
+                document.getElementById('frame_count' + curID).innerHTML = "Frame #: " + renderCount;
+                document.getElementById("coded_width" + curID).innerHTML = "codedWidth: " + frame.codedWidth;
+                document.getElementById("coded_height" + curID).innerHTML = "codedHeight: " + frame.codedHeight;
+                document.getElementById("display_width" + curID).innerHTML = "displayWidth: " + frame.displayWidth;
+                document.getElementById("display_height" + curID).innerHTML = "displayHeight: " + frame.displayHeight;
+
+                cnv.width = frame.displayWidth;
+                cnv.height = frame.displayHeight;
+            } catch(err) {
+                document.getElementById('filename' + curID).innerHTML = "Error: " + err.message;
+            }
+        }
+
+        function handleFrame(frame) {
+            console.log('handling frame ' + handleCount);
+            handleCount++;
+            readyFrames.push(frame);
+            if (underflow)
+                setTimeout(renderFrame, 0);
+        }
+
+        function handleFrame1(frame) {
+            console.log('handling1 frame ' + handleCount1);
+            handleCount1++;
+            readyFrames1.push(frame);
+            if (underflow1)
+                setTimeout(renderFrame1, 0);
+        }
+        function handleFrame2(frame) {
+            console.log('handling2 frame ' + handleCount2);
+            handleCount2++;
+            readyFrames2.push(frame);
+            if (underflow2)
+                setTimeout(renderFrame2, 0);
+        }
+
+        function delay(time_ms) {
+            return new Promise((resolve) => {
+                setTimeout(resolve, time_ms);
+            });
+        }
+
+        async function renderFrame() {
+            console.log('rendering frame ' + renderCount);
+            
+            renderCount++;
+            if (readyFrames.length == 0) {
+                underflow = true;
+                return;
+            }
+            let frame = readyFrames.shift();
+            underflow = false;
+
+            let bitmap = await frame.createImageBitmap();
+            let frameTime = 50; // in milliseconds
+            await delay(frameTime);
+            if (!statsDisplayed) {
+                displayStats(frame);
+                statsDisplayed = true;
+            } else {
+                // just update the frame count
+                document.getElementById('frame_count').innerHTML = "Frame #: " + renderCount;
+            }
+            let cnv = document.getElementById('dst');
+            let ctx = cnv.getContext('2d', { alpha: false });
+
+            ctx.drawImage(bitmap, 0, 0);
+
+            // Immediately schedule rendering of the next frame
+            setTimeout(renderFrame, 0);
+            frame.close();
+        }
+
+        async function renderFrame1() {
+            console.log('rendering1 frame ' + renderCount1);
+            
+            renderCount1++;
+            if (readyFrames1.length == 0) {
+                underflow1 = true;
+                return;
+            }
+            let frame = readyFrames1.shift();
+            underflow1 = false;
+
+            let bitmap = await frame.createImageBitmap();
+            let frameTime = 50; // in milliseconds
+            await delay(frameTime);
+            if (!statsDisplayed1) {
+                displayStats(frame, '1');
+                statsDisplayed1 = true;
+            } else {
+                // just update the frame count
+                document.getElementById('frame_count1').innerHTML = "Frame #: " + renderCount1;
+            }
+            let cnv = document.getElementById('dst1');
+            let ctx = cnv.getContext('2d', { alpha: false });
+
+            ctx.drawImage(bitmap, 0, 0);
+
+            // Immediately schedule rendering of the next frame
+            setTimeout(renderFrame1, 0);
+            frame.close();
+        }
+
+        async function renderFrame2() {
+            console.log('rendering2 frame ' + renderCount2);
+            
+            renderCount2++;
+            if (readyFrames2.length == 0) {
+                underflow2 = true;
+                return;
+            }
+            let frame = readyFrames2.shift();
+            underflow2 = false;
+
+            let bitmap = await frame.createImageBitmap();
+            let frameTime = 50; // in milliseconds
+            await delay(frameTime);
+            if (!statsDisplayed2) {
+                displayStats(frame, "2");
+                statsDisplayed2 = true;
+            } else {
+                // just update the frame count
+                document.getElementById('frame_count2').innerHTML = "Frame #: " + renderCount2;
+            }
+            let cnv = document.getElementById('dst2');
+            let ctx = cnv.getContext('2d', { alpha: false });
+
+            ctx.drawImage(bitmap, 0, 0);
+
+            // Immediately schedule rendering of the next frame
+            setTimeout(renderFrame2, 0);
+            frame.close();
+        }
+
+        async function decodeVideo(assetURL, avcC, curID="") {
+            if ("VideoDecoder" in window) {
+                canvID = curID;
+                let cnv = document.getElementById('dst' + canvID);
+                const init = {
+                    output : handleFrame,
+                    error: (e) => {
+                        console.log(e.message);
+                    }
+                };
+
+                const config = {
+                    codec: "avc1.64000a",
+                    description : avcC, 
+                    codedWidth: cnv.width,
+                    codedHeight: cnv.height,
+                };
+
+                let decoder = new VideoDecoder(init);
+                decoder.configure(config);
+
+                console.log('creating encoded video chunk');
+
+                (await fetch(assetURL)).arrayBuffer().then(async function(buffer) {
+                    let chunk = new EncodedVideoChunk({
+                        type : "key",
+                        timestamp: frameTime,
+                        data : buffer,
+                    });
+            
+                    handleCount = 0;
+                    renderCount = 0;
+                    statsDisplayed = false;
+            
+                    decoder.decode(chunk);
+                    
+                    await decoder.flush();
+                });
+            } else {
+                document.body.innerHTML = "<h1>WebCodecs API is not supported.</h1>";
+                return;
+            }
+        }
+
+        /*************************************************/
+        var assetURL_tf = '264/tf_avcc.264';
+        var avcC_tf = new Uint8Array([ // avcC atom from MP4 containing SPS and PPS
+            0x01, 0x42, 0xC0, 0x1E, 0xFF, 0xE1, 0x00, 0x1A, 0x67, 0x42, 
+            0xC0, 0x1E, 0x9A, 0x72, 0x03, 0xC1, 0x7F, 0xCB, 0x80, 0x88, 
+            0x00, 0x00, 0x03, 0x00, 0x08, 0x00, 0x00, 0x03, 0x01, 0xE0, 
+            0x78, 0xB1, 0x72, 0x40, 0x01, 0x00, 0x04, 0x68, 0xCE, 0x32, 
+            0xC8
+        ]);
+        var canvID_tf = "1";
+
+        var assetURL_il = '264/il_avcc.264';
+        var avcC_il = new Uint8Array([ // avcC atom from MP4 containing SPS and PPS
+            0x01, 0x64, 0x00, 0x0B, 0xFF, 0xE1, 0x00, 0x18, 0x67, 0x64, 
+            0x00, 0x0B, 0xAC, 0xD9, 0x42, 0x4D, 0xF8, 0x88, 0x40, 0x00, 
+            0x00, 0x03, 0x00, 0x40, 0x00, 0x00, 0x0F, 0x03, 0xC5, 0x0A, 
+            0x65, 0x80, 0x01, 0x00, 0x05, 0x68, 0xEB, 0xEC, 0xB2, 0x2C
+        ]);
+        var canvID_il = "2";
+
+        /*************************************************/
         var b1 = document.createElement("button");
         b1.setAttribute("type", "button");
         b1.setAttribute("class", "btn btn-primary");
         b1.innerHTML = "Play Video 1";
         b1.addEventListener("click", function() {
-            var assetURL = '264/tf_avcc.264';
-            var avcC = new Uint8Array([ // avcC atom from MP4 containing SPS and PPS
-                0x01, 0x42, 0xC0, 0x1E, 0xFF, 0xE1, 0x00, 0x1A, 0x67, 0x42, 
-                0xC0, 0x1E, 0x9A, 0x72, 0x03, 0xC1, 0x7F, 0xCB, 0x80, 0x88, 
-                0x00, 0x00, 0x03, 0x00, 0x08, 0x00, 0x00, 0x03, 0x01, 0xE0, 
-                0x78, 0xB1, 0x72, 0x40, 0x01, 0x00, 0x04, 0x68, 0xCE, 0x32, 
-                0xC8
-            ]);
-            var canvID = "1";
-            decodeVideo(assetURL, avcC, canvID);
+            decodeVideo(assetURL_tf, avcC_tf, canvID_tf);
         });
-
         document.querySelector(".controls").appendChild(b1);
 
         var b2 = document.createElement("button");
@@ -74,49 +289,92 @@
         b2.setAttribute("class", "btn btn-primary");
         b2.innerHTML = "Play Video 2";
         b2.addEventListener("click", function() {
-            var assetURL = '264/il_avcc.264';
-            var avcC = new Uint8Array([ // avcC atom from MP4 containing SPS and PPS
-                0x01, 0x64, 0x00, 0x0B, 0xFF, 0xE1, 0x00, 0x18, 0x67, 0x64, 
-                0x00, 0x0B, 0xAC, 0xD9, 0x42, 0x4D, 0xF8, 0x88, 0x40, 0x00, 
-                0x00, 0x03, 0x00, 0x40, 0x00, 0x00, 0x0F, 0x03, 0xC5, 0x0A, 
-                0x65, 0x80, 0x01, 0x00, 0x05, 0x68, 0xEB, 0xEC, 0xB2, 0x2C
-            ]);
-            var canvID = "2";
-            decodeVideo(assetURL, avcC, canvID);
+            decodeVideo(assetURL_il, avcC_il, canvID_il);
         });
-
         document.querySelector(".controls").appendChild(b2);
 
         var b3 = document.createElement("button");
         b3.setAttribute("type", "button");
         b3.setAttribute("class", "btn btn-primary");
         b3.innerHTML = "Play Both";
-        b3.addEventListener("click", function() {
-            var assetURL = '264/tf_avcc.264';
-            var avcC = new Uint8Array([ // avcC atom from MP4 containing SPS and PPS
-                0x01, 0x42, 0xC0, 0x1E, 0xFF, 0xE1, 0x00, 0x1A, 0x67, 0x42, 
-                0xC0, 0x1E, 0x9A, 0x72, 0x03, 0xC1, 0x7F, 0xCB, 0x80, 0x88, 
-                0x00, 0x00, 0x03, 0x00, 0x08, 0x00, 0x00, 0x03, 0x01, 0xE0, 
-                0x78, 0xB1, 0x72, 0x40, 0x01, 0x00, 0x04, 0x68, 0xCE, 0x32, 
-                0xC8
-            ]);
-            var canvID = "1";
-            decodeVideo(assetURL, avcC, canvID);
+        b3.addEventListener("click", async function() {
+            if ("VideoDecoder" in window) {
+                canvID = '';
+                
+                let cnv1 = document.getElementById('dst1');
+                let cnv2 = document.getElementById('dst2');
+                const init1 = {
+                    output : handleFrame1,
+                    error: (e) => {
+                        console.log(e.message);
+                    }
+                };
+                const config1 = {
+                    codec: "avc1.64000a",
+                    description : avcC_tf, 
+                    codedWidth: cnv1.width,
+                    codedHeight: cnv1.height,
+                };
 
-            var assetURL1 = '264/il_avcc.264';
-            var avcC1 = new Uint8Array([ // avcC atom from MP4 containing SPS and PPS
-                0x01, 0x64, 0x00, 0x0B, 0xFF, 0xE1, 0x00, 0x18, 0x67, 0x64, 
-                0x00, 0x0B, 0xAC, 0xD9, 0x42, 0x4D, 0xF8, 0x88, 0x40, 0x00, 
-                0x00, 0x03, 0x00, 0x40, 0x00, 0x00, 0x0F, 0x03, 0xC5, 0x0A, 
-                0x65, 0x80, 0x01, 0x00, 0x05, 0x68, 0xEB, 0xEC, 0xB2, 0x2C
-            ]);
-            var canvID1 = "2";
-            decodeVideo(assetURL1, avcC1, canvID1);
+                const init2 = {
+                    output : handleFrame2,
+                    error: (e) => {
+                        console.log(e.message);
+                    }
+                };
+                const config2 = {
+                    codec: "avc1.64000a",
+                    description : avcC_il, 
+                    codedWidth: cnv2.width,
+                    codedHeight: cnv2.height,
+                };
+
+                let decoder1 = new VideoDecoder(init1);
+                decoder1.configure(config1);
+                console.log('creating encoded video chunk1');
+
+                let decoder2 = new VideoDecoder(init2);
+                decoder2.configure(config2);
+                console.log('creating encoded video chunk2');
+
+                (await fetch(assetURL_tf)).arrayBuffer().then(async function(buffer) {
+                    let chunk = new EncodedVideoChunk({
+                        type : "key",
+                        timestamp: frameTime,
+                        data : buffer,
+                    });
+            
+                    handleCount1 = 0;
+                    renderCount1 = 0;
+                    statsDisplayed1 = false;
+            
+                    decoder1.decode(chunk);
+                    
+                    await decoder1.flush();
+                });
+
+                (await fetch(assetURL_il)).arrayBuffer().then(async function(buffer) {
+                    let chunk = new EncodedVideoChunk({
+                        type : "key",
+                        timestamp: frameTime,
+                        data : buffer,
+                    });
+            
+                    handleCount2 = 0;
+                    renderCount2 = 0;
+                    statsDisplayed2 = false;
+            
+                    decoder2.decode(chunk);
+                    
+                    await decoder2.flush();
+                });
+            } else {
+                document.body.innerHTML = "<h1>WebCodecs API is not supported.</h1>";
+            }
         });
 
         document.querySelector(".controls").appendChild(b3);
     </script>
-    <script src="js/webcodec.js"></script>
 </body>
 
 </html>
