@@ -49,13 +49,15 @@ function delay(time_ms) {
 }
 
 async function renderFrame() {
-    console.log('rendering frame ' + renderCount);
-    
-    renderCount++;
     if (readyFrames.length == 0) {
+        console.log('renderFrame: no frames to render');
         underflow = true;
         return;
     }
+    
+    console.log('renderFrame: rendering frame ' + renderCount);
+    renderCount++;
+
     let frame = readyFrames.shift();
     underflow = false;
 
