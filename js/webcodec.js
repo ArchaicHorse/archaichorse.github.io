@@ -123,8 +123,9 @@ async function decodeVideo(assetURL, avcC, curID="") {
             decoder.decode(chunk);
             
             await decoder.flush();
+            await decoder.close();
         });
-
+        
 
     } else {
         document.body.innerHTML = "<h1>WebCodecs API is not supported.</h1>";
