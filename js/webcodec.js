@@ -31,9 +31,10 @@ function handleFrame(frame) {
 }
 
 function handleSingleFrame(frame) {
-    console.log('handleSingleFrame: ' + handleCount);
-    handleCount++;
-    if (handleCount == 1) {
+    if (handleCount == 0) {
+        console.log('handleSingleFrame: ' + handleCount);
+        handleCount++;
+
         readyFrames.push(frame);
         if (underflow)
             setTimeout(renderFrame, 0);
@@ -54,7 +55,6 @@ async function renderFrame() {
         underflow = true;
         return;
     }
-    
     console.log('renderFrame: rendering frame ' + renderCount);
     renderCount++;
 
