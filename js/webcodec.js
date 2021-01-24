@@ -30,6 +30,18 @@ function handleFrame(frame) {
         setTimeout(renderFrame, 0);
 }
 
+function handleSingleFrame(frame) {
+    console.log('handleSingleFrame: ' + handleCount);
+    handleCount++;
+    if (handleCount == 1) {
+        readyFrames.push(frame);
+        if (underflow)
+            setTimeout(renderFrame, 0);
+    } else {
+        console.log('handleSingleFrame: skipping')
+    }
+}
+
 function delay(time_ms) {
     return new Promise((resolve) => {
         setTimeout(resolve, time_ms);
@@ -77,6 +89,11 @@ async function decodeVideo(assetURL, avcC, curID="") {
                 console.log(e.message);
             }
         };
+
+        // il only outputs one frame
+        if (assetURL == '264/il_avcc.264') {
+            init.output = handleSingleFrame;
+        }
 
         const config = {
             codec: "avc1.64000a",
