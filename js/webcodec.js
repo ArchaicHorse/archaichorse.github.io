@@ -61,6 +61,12 @@ async function renderFrame() {
     let frame = readyFrames.shift();
     underflow = false;
 
+    if (frame.planes === null) {
+        document.getElementById('planestatus').innerHTML = "planes null";
+    } else {
+        document.getElementById('planestatus').innerHTML = "planes fly! " + frame.planes;
+    }
+
     let bitmap = await frame.createImageBitmap();
     
     await delay(frameTime);
