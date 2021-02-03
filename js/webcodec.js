@@ -84,7 +84,7 @@ async function renderFrame() {
 
     // Immediately schedule rendering of the next frame
     setTimeout(renderFrame, 0);
-    frame.close();
+    frame.destroy();
 }
 
 async function decodeVideo(assetURL, avcC, curID="") {
