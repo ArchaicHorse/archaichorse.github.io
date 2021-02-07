@@ -53,17 +53,18 @@ async function renderFrame() {
     }
 
     let bitmap = await frame.createImageBitmap();
-    
+    console.log('created bitmap');
+
     await delay(frameTime);
 
+    console.log('new offscreen canvas');
     let cnv = new OffscreenCanvas(width, height);
-
     let ctx = cnv.getContext('2d', { alpha: false });
-
+    console.log('drawing image');
     ctx.drawImage(bitmap, 0, 0);
-
+    console.log('posting bitmap');
     self.postMessage(bitmap);
-
+    console.log('another one!');
     // Immediately schedule rendering of the next frame
     setTimeout(renderFrame, 0);
     frame.destroy();
