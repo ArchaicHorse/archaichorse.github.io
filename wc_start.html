@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+</head>
+
+<body>
+    <main role="main" class="container">
+        <div>
+            <h1>WebCodecs Video Decoding Start Test</h1>
+            <hr>
+            <div class="controls"></div>
+            <hr>
+        </div>
+    </main>
+
+    <script>
+        let handleCount = 0;
+
+        function handleFrame(frame) {
+            console.log('handling frame ' + handleCount);
+            handleCount++;
+        }
+
+        var button = document.createElement("button");
+        button.setAttribute("type", "button");
+        button.setAttribute("class", "btn btn-primary");
+        button.innerHTML = "Init VideoDecoder";
+        button.addEventListener("click", function() {
+            if ("VideoDecoder" in window) {
+                const init = {
+                    output : handleFrame,
+                    error: (e) => {
+                        console.log(e.message);
+                    }
+                };
+                
+                console.log('init videodecoder');
+                let decoder = new VideoDecoder(init);
+                console.log('initialized videodecoder');
+
+            } else {
+                document.body.innerHTML = "<h1>WebCodecs API is not supported.</h1>";
+                return;
+            }
+        });
+
+        document.querySelector(".controls").appendChild(button);
+    </script>
+</body>
+
+</html>

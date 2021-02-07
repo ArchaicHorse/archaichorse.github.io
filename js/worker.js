@@ -67,7 +67,7 @@ async function renderFrame() {
     console.log('another one!');
     // Immediately schedule rendering of the next frame
     setTimeout(renderFrame, 0);
-    frame.destroy();
+    frame.close();
 }
 
 async function decodeVideo(buffer, avcC, single=false) {
