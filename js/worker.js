@@ -92,7 +92,9 @@ async function decodeVideo(buffer, avcC, single=false) {
     };
 
     let decoder = new VideoDecoder(init);
+    console.log(decoder);
     decoder.configure(config);
+    console.log(decoder);
 
     console.log('creating encoded video chunk');
 
@@ -106,6 +108,7 @@ async function decodeVideo(buffer, avcC, single=false) {
     renderCount = 0;
 
     decoder.decode(chunk);
+    console.log(decoder);
     
     await decoder.flush();
     await decoder.close();
